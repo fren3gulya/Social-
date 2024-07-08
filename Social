@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: MIT
+// Generated with Spectral Syntax
+
+contract SocialRepository {
+    struct Post {
+        address author;
+        string content;
+        uint256 likes;
+        string[] comments;
+    }
+
+    mapping(uint256 => Post) public posts;
+    uint256 public postCount;
+
+    // Function to create a new post
+    function createPost(string memory _content) public {
+        // Increment post count
+        postCount++;
+        // Add the new post to the mapping
+        posts[postCount] = Post(msg.sender, _content, 0, new string[](0));
+    }
+
+    // Function to like a post
+    function likePost(uint256 _postId) public {
+        // Check if the post exists
+        require(_postId > 0 && _postId <= postCount, "Post does not exist");
+        // Check if the user is the author of the post
+        require(posts[_postId].author == msg.sender, "You are not the author of this post");
+        // Increase the likes of the post
+        posts[_postId].likes++;
+    }
+
+    // Function to add a comment to a post
+    function addComment(uint256 _postId, string memory _comment) public {
+        // Check if the post exists
+        require(_postId > 0 && _postId <= postCount, "Post does not exist");
+        // Add the comment to the post
+        posts[_postId].comments.push(_comment);
+    }
+}
